@@ -128,11 +128,13 @@ _edit_service()   {
     local SECRET_KEY2=""
 
     echo "Editing service '$SERVICE':"
+    echo "Name: $SERVICE"
     read -p "Service name (Enter to keep existing): " -t 120 SERVICE2
     if [ $? -ne 0 ]; then
         echo "Timeout exceeded..."
         return
     fi
+    echo "2FA Secret Key: $SECRET_KEY"
     read -p "2FA secret key hash (Enter to keep existing): " -t 120 SECRET_KEY2
     if [ $? -ne 0 ]; then
         echo "Timeout exceeded..."
