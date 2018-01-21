@@ -13,6 +13,9 @@ so that user@user can be used as remote interactive terminal tool to manage 2FA 
 
 ![](images/2fa-authenticator.gif?raw=true)
 
+# WARNING
+ATTENTION: LOCAL DATA IS STILL NOT ENCRYPTED! DATA IS STORED IN CLEAR-TEXT INSIDE USER HOME DIR. 
+Take the necessary precautions to avoid giving access to other users on the system.
 
 # License
 MIT License
