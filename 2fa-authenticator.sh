@@ -139,7 +139,7 @@ _edit_service()   {
         return
     fi
     if [ "$SERVICE2" != "" ]; then
-        mv -f "$SERVICE" "$SERVICE2"
+        mv -f "$STORE_DIR/$SERVICE" "$STORE_DIR/$SERVICE2"
         SERVICE="$SERVICE2"
     fi
     if [ "$SECRET_KEY2" != "$SECRET_KEY" ]; then
@@ -204,45 +204,50 @@ _generate_service_2fa() {
 
 _read_service_store
 
-clear
-echo ""
-echo "# Select an Option: "
-echo ""
-select opt in $SERVICES; do
-    clear
-    if [ -f "$STORE_DIR/$opt" ]; then
-        _generate_service_2fa "$opt"
-    elif [ "$opt" = "Settings" ]; then
-        echo ""
-        echo "# Settings:"
-        echo ""
-        select opt2 in $SETTINGS; do
-            clear
-            if [ "$opt2" = "Add" ]; then
-                _add_service
-            elif [ "$opt2" = "Edit" ]; then
-                _edit_service
-            elif [ "$opt2" = "Remove" ]; then
-                _remove_service
-            elif [ "$opt2" = "Back" ]; then
-                break # Break to main menu loop
-            fi
-            clear
-            echo ""
-            echo "# Settings: "
-            echo ""
-            _read_service_store
-        done
-        _read_service_store
-        read -t 1 # This is needed, for some reason, to correctly display the next main menu
-    elif [ "$opt" = "Quit" ]; then
-        clear
-        exit
-    fi
+while [ "$opt" != "Quit" ]; do
     clear
     echo ""
     echo "# Select an Option: "
     echo ""
+    select opt in $SERVICES; do
+        clear
+        if [ -f "$STORE_DIR/$opt" ]; then
+            _generate_service_2fa "$opt"
+            break
+        elif [ "$opt" = "Settings" ]; then
+            echo ""
+            echo "# Settings:"
+            echo ""
+            select opt2 in $SETTINGS; do
+                clear
+                if [ "$opt2" = "Add" ]; then
+                    _add_service
+                elif [ "$opt2" = "Edit" ]; then
+                    _edit_service
+                elif [ "$opt2" = "Remove" ]; then
+                    _remove_service
+                elif [ "$opt2" = "Back" ]; then
+                    _read_service_store
+                    break 2 # Break to main menu loop
+                fi
+                clear
+                echo ""
+                echo "# Settings: "
+                echo ""
+                _read_service_store
+            done
+            _read_service_store
+            read -t 1 # This is needed, for some reason, to correctly display the next main menu
+        elif [ "$opt" = "Quit" ]; then
+            clear
+            break
+        fi
+        clear
+        echo ""
+        echo "# Select an Option: "
+        echo ""
+        _read_service_store
+    done
     _read_service_store
 done
 
